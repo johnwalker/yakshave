@@ -10,11 +10,17 @@
   :source-paths ["src"]
 
   :cljsbuild {
-    :builds [{:id "io.johnwalker/yakshave"
-              :source-paths ["src"]
-              :compiler {
-                :output-to "out/io/johnwalker/yakshave.js"
-                :output-dir "out"
-                :target :nodejs
-                :optimizations :none
-                :source-map true}}]})
+              :builds [{:id "io.johnwalker/yakshave"
+                        :source-paths ["src"]
+                        :compiler {
+                                   :output-to "out/io/johnwalker/yakshave.js"
+                                   :output-dir "out"
+                                   :target :nodejs
+                                   :optimizations :none
+                                   :source-map true}}
+                       {:id "prod"
+                        :source-paths ["src"]
+                        :compiler {:output-to "prod/yakshave.js"
+                                   :output-dir "prod"
+                                   :target :nodejs
+                                   :optimizations :advanced}}]})
