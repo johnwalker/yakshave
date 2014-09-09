@@ -4,6 +4,7 @@
     "author": "A confused individual <iam@confused.com>",
     "version": "0.0.1",
     "dependencies": {
+	"adm-zip": ">= 0.4.4",
 	"mustache": ">= 0.8.2"
     },
     "bin": "prod/yakshave.js",

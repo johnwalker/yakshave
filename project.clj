@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
 
   :dependencies [[org.clojure/clojure "1.7.0-alpha2"]
-                 [org.clojure/clojurescript "0.0-2322"]]
+                 [org.clojure/clojurescript "0.0-2322"]
+                 [org.clojure/core.match "0.2.1"]]
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]]
 
@@ -12,8 +13,7 @@
   :cljsbuild {
               :builds [{:id "io.johnwalker/yakshave"
                         :source-paths ["src"]
-                        :compiler {
-                                   :output-to "out/io/johnwalker/yakshave.js"
+                        :compiler {:output-to "out/io/johnwalker/yakshave.js"
                                    :output-dir "out"
                                    :target :nodejs
                                    :optimizations :none
@@ -22,5 +22,9 @@
                         :source-paths ["src"]
                         :compiler {:output-to "prod/yakshave.js"
                                    :output-dir "prod"
+                                   :externs ["externs/adm.js"
+                                             "externs/fs.js"
+                                             "externs/mustache.js"
+                                             "externs/process.js"]
                                    :target :nodejs
                                    :optimizations :advanced}}]})
