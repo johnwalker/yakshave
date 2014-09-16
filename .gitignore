@@ -4,6 +4,8 @@ pom.xml
 /classes/
 /out/
 /target/
+/node_modules/
+/prod/
 .lein-deps-sum
 .lein-repl-history
 .lein-plugins/
