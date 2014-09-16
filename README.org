@@ -1,0 +1,162 @@
+* yakshave
+
+  #+BEGIN_QUOTE
+  Richter: Die monster. You don’t belong in this world!
+
+  Dracula: It was not by my hand I was once again given flesh. I was
+  brought here by humans who wished to be me tribute!
+
+  Richter: Tribute!? You steal men’s souls, and make them your slaves!
+
+  Dracula: Perhaps the same could be said of all religions…
+
+  Richter: Your words are as empty as your soul! Mankind ill needs a
+  savior such as you!
+
+  Dracula: What is a man? A miserable little pile of secrets. But
+  enough talk… Have at you!
+  #+END_QUOTE
+
+** What is a yakshave?
+   Yakshave is a tool written in Clojurescript (Nodejs) for managing
+   and generating [[https://github.com/technomancy/leiningen][leiningen]] projects. It aims to handle the scripting
+   tasks that leiningen is currently used for and more.
+
+   Provided that you have nodejs, you can install yakshave with:
+
+   #+BEGIN_SRC sh
+$ npm install yakshave -g
+   #+END_SRC
+
+   The latest version is 0.1.2.
+
+   You can also fork it and run:
+
+   #+BEGIN_SRC sh
+$ lein cljsbuild once prod
+$ npm install -g
+   #+END_SRC
+
+** Why should I yakshave?
+   It's a lot faster - in the initial release:
+
+   #+BEGIN_SRC sh
+$ time yakshave new foobar
+# yakshave new foobar  0.60s user 0.05s system 96% cpu 0.668 total
+$ time lein new bizbar
+# lein new bizbar  4.07s user 0.10s system 145% cpu 2.877 total
+   #+END_SRC
+
+   Hmm. Like 6 times faster. But remember, those templates are buried
+   deep within the leiningen.jar.
+
+   #+BEGIN_SRC sh
+$ time ys new compojure example                                                                                                                                                                                                                                          !2804
+yakshave new compojure example  0.18s user 0.01s system 101% cpu 0.191 total
+
+$ time lein new compojure example2                                                                                                                                                                                                                                       !2841
+lein new compojure example2  4.66s user 0.18s system 120% cpu 4.020 total
+   #+END_SRC
+
+   For small templates it's almost 26 times faster! Note that the
+   compojure template refers to this repository:
+   https://github.com/johnwalker/compojure-template
+
+   Aliasing yakshave to ys for finger performance is recommended.
+
+   #+BEGIN_SRC sh
+# in .bashrc / .zshrc
+alias ys='yakshave'
+   #+END_SRC
+** Why shouldn't I yakshave?
+   It's not battle-tested. There are probably a lot of bugs, too. Many
+   lein templates aren't yet compatible with yakshave. [[http://pages.citebite.com/b2x0j8q1megb][You would have
+   to install nodejs.]] 
+** Complete list of supported tasks
+   #+BEGIN_SRC sh
+yakshave new template-name? project-name
+   #+END_SRC
+** Usage
+*** new - Generating projects
+    Yakshave templates -- just like leiningen -- are hosted in maven
+    repositories. It is very easy for a leiningen template to be a
+    yakshave template, and vice versa. The difference between the two
+    is that yakshave templates use edn, while leiningen templates are
+    fully programmatic, as they are written in Clojure. Since yakshave
+    is brand new, many lein templates will not work yet. If you're the
+    author of a template and want some help setting it up for
+    yakshave, please open an issue!
+
+    #+BEGIN_EXAMPLE
+    yakshave new foobar
+    yakshave new app foobar
+    #+END_EXAMPLE
+**** Creating yakshave compatible templates
+     Yakshave templates should use standard names for standard
+     stuff. If we've missed a value that you think should be here, let
+     us know.
+
+     The {{names}} you should be using are the keys of the following
+     map:
+
+     #+BEGIN_SRC clojure
+{:year        (t/year)
+ :name        project
+ :sanitized   (t/sanitize-ns project)
+ :main-ns     (t/multi-segment project)
+ :path        (t/name-to-path (t/multi-segment (t/sanitize-ns project)))
+ :group-id    (t/group-name project)
+ :artifact-id (t/project-name project)}
+     #+END_SRC
+
+     And you should also add a yakshave.edn to the resources folder of
+     your template. It should contain something like:
+
+     #+BEGIN_SRC clojure
+{:renderer "compojure"
+ :files [[".gitignore" "gitignore"]
+         ["project.clj" "project_lein2.clj"]
+         ["README.md" "README.md"]
+         ["src/{{path}}/handler.clj" "handler.clj"]
+         ["test/{{path}}/test/handler.clj" "handler_test.clj"]
+         "resources/public"]}
+     #+END_SRC
+
+     See the example: https://github.com/johnwalker/compojure-template/tree/yakshave
+
+**** List of yakshave compatible templates
+     The built-in leiningen templates:
+
+     + app
+     + default
+     + template
+     + plugin
+
+       The compojure fork: https://github.com/johnwalker/compojure-template
+**** Template wishlist
+     These are some high priority templates for yakshave
+     compatibility.
+
+     + cljs-start
+     + compojure
+     + mies
+     + mies-node
+     + reloaded
+** Contributing
+   *Contributors are wanted very badly.* There are many ways to help
+   out - porting lein-templates to yakshave, general refactoring,
+   writing documentation, blogging about yakshave and contributing
+   criticism are all great help.
+
+   Outside of yakshave itself, these are extremely critical:
+
+   + [[https://github.com/xsc/rewrite-clj/issues/4][porting rewrite-clj to cljs]]
+   + contributing to [[https://github.com/clojure/core.match][core.match]], [[https://github.com/clojure/clojurescript][clojurescript]], [[https://github.com/cthackers/adm-zip][adm-zip]] or [[https://github.com/janl/mustache.js][mustache.js]]
+
+** Discussion
+   + [[https://groups.google.com/forum/#!topic/clojure/2XjEn5aeoQM][Initial Google groups discussion]]
+** License
+   Copyright © 2014 John Walker and contributors
+
+   Distributed under the Eclipse Public License version 1.0, the same
+   as Clojure.
