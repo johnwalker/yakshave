@@ -1,5 +1,5 @@
-(ns io.johnwalker.yakshave.new.lein-templates)
-
+(ns io.johnwalker.yakshave.new.builtins.lein)
+ 
 (def app
   "{:renderer \"app\"
     :files [[\"project.clj\" \"project.clj\"]
@@ -20,7 +20,7 @@
             [\"test/{{nested-dirs}}_test.clj\" \"test.clj\"]
             [\"LICENSE\" \"LICENSE\"]]}")
 
-(def plugin
+(def plugin 
   "{:renderer \"plugin\"
    :files [[\"project.clj\" \"project.clj\"]
            [\"README.md\" \"README.md\"]
