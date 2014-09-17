@@ -4,6 +4,13 @@
             [cljs.core.match]
             [io.johnwalker.yakshave.new :as task]))
 
+(enable-console-print!)
+
+(defn make-help-message [args]
+  (str "Unrecognized arguments " args "\n"
+       "Available tasks:\n"
+       "new\n"))
+
 (defn -main [& args]
   (let [debug (= ":debug" (first args))
         args (if debug
@@ -21,6 +28,8 @@
            (task/new "leiningen" template project-name debug)
 
            [["new" template project-name]]
-           (task/new template    template project-name debug))))
+           (task/new template    template project-name debug)
+           :else
+           (println (make-help-message args)))))
 
 (set! *main-cli-fn* -main)
