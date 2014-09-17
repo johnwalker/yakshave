@@ -1,6 +1,6 @@
 (ns io.johnwalker.yakshave.new
   (:require [clojure.set]
-            [io.johnwalker.yakshave.new.lein-templates :as lein]
+            [io.johnwalker.yakshave.new.builtins.lein :as lein]
             [io.johnwalker.yakshave.new.templates :as t]
             [io.johnwalker.yakshave.node :as node]))
 
