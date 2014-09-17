@@ -30,6 +30,6 @@
            [["new" template project-name]]
            (task/new template    template project-name debug)
            :else
-           (println (make-help-message args)))))
+           (.log js/console (make-help-message args)))))
 
 (set! *main-cli-fn* -main)
