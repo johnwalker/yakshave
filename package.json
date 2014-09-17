@@ -1,12 +1,11 @@
 {
     "name": "yakshave",
     "description": "A package using naive versioning",
-    "author": "A confused individual <iam@confused.com>",
-    "version": "0.0.1",
+    "author": "John Walker <john.lou.walker@gmail.com>",
+    "version": "0.1.0",
     "dependencies": {
 	"adm-zip": ">= 0.4.4",
 	"mustache": ">= 0.8.2"
     },
-    "bin": "prod/yakshave.js",
-    "engine": "node 1.4.26"
+    "bin": "prod/yakshave.js"
 }
