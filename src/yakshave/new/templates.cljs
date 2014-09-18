@@ -104,6 +104,3 @@
 (defn- template-path [name path data]
   (str name (render-text path data)))
 
-(def ^{:dynamic true} *dir* nil)
-
-(def ^{:dynamic true} *force?* false)
