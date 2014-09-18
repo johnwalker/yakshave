@@ -87,6 +87,9 @@ yakshave new template-name? project-name
     author of a template and want some help setting it up for
     yakshave, please open an issue!
 
+    One very important difference is that *yakshave doesn't fetch
+    templates yet.*
+
     #+BEGIN_EXAMPLE
     yakshave new foobar
     yakshave new app foobar
@@ -122,7 +125,9 @@ yakshave new template-name? project-name
          "resources/public"]}
      #+END_SRC
 
-     See the example: https://github.com/johnwalker/compojure-template/tree/yakshave
+     See the example:
+     https://github.com/johnwalker/compojure-template/tree/yakshave. Note,
+     the names are still very wet paint.
 
 **** List of yakshave compatible templates
      The built-in leiningen templates:
