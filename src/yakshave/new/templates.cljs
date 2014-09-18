@@ -64,7 +64,7 @@
   The additional segment defaults to \"core\"."
   ([s] (multi-segment s "core"))
   ([s final-segment]
-     (if (re-matches #"\." s)
+     (if (re-find #"\." s)
        s
        (str s "." final-segment))))
 

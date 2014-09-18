@@ -10,8 +10,13 @@
   {:year         (t/year)
    :name          project
    :sanitized-ns (t/sanitize-ns project)
-   :main-ns      (t/multi-segment project)
-   :path         (t/name-to-path (t/multi-segment project))
+   :main-ns      (-> project
+                     t/sanitize-ns
+                     t/multi-segment)
+   :path         (-> project
+                     t/sanitize-ns
+                     t/multi-segment
+                     t/name-to-path)
    :group-id     (t/group-name project)
    :artifact-id  (t/project-name project)})
 
@@ -31,7 +36,7 @@
       (let [a-compromise (clojure.set/rename-keys
                           standard
                           {:path :nested-dirs
-                           :full-name :raw-name
+                           :name :raw-name
                            :main-ns :namespace})]
         (merge a-compromise (leiningen-map template project)))
       standard)))
