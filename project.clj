@@ -3,8 +3,8 @@
   :url "http://example.com/FIXME"
 
   :dependencies [[org.clojure/clojure "1.7.0-alpha2"]
-                 [org.clojure/clojurescript "0.0-2322"]
-                 [org.clojure/core.match "0.2.1"]]
+                 [org.clojure/clojurescript "0.0-2341"]
+                 [org.clojure/core.match "0.2.2"]]
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]]
 
@@ -24,6 +24,7 @@
                                    :output-dir "prod"
                                    :externs ["externs/adm.js"
                                              "externs/fs.js"
+                                             "externs/mkdirp.js"
                                              "externs/mustache.js"
                                              "externs/process.js"]
                                    :target :nodejs

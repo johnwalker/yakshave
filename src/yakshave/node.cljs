@@ -1,6 +1,5 @@
-(ns io.johnwalker.yakshave.node
-  (:require [clojure.string :as str]
-            [cljs.nodejs :as nodejs]))
+(ns yakshave.node
+  (:require [cljs.nodejs :as nodejs]))
 
 (nodejs/enable-util-print!)
 
@@ -9,6 +8,7 @@
 (def fs       (nodejs/require "fs"))
 (def adm      (nodejs/require "adm-zip"))
 (def mustache (nodejs/require "mustache"))
+(def mkdirp   (nodejs/require "mkdirp"))
 (set! mustache.escape identity)
 
 (def maven-repository-home
@@ -37,14 +37,6 @@
 (defn mkdir [path]
   (.mkdirSync fs path))
 
-(defn mkdir-for [filepath]
-  (let [dirs (str/split filepath #"/")]
-    (reduce
-     (fn [current-dir dir]
-       (try
-         (mkdir current-dir)
-         (catch js/Error e
-           ;; TODO: delete this
-           nil))
-       (str current-dir "/" dir))
-     (first dirs) (rest dirs))))
+(defn mkdirp-sync [path opts]
+  (.sync mkdirp path opts))
+ 

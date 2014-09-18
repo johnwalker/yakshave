@@ -1,6 +1,6 @@
-(ns io.johnwalker.yakshave.new.templates
+(ns yakshave.new.templates
   (:require [clojure.string :as str]
-            [io.johnwalker.yakshave.node :refer [maven-repository-home os path mustache]]))
+            [yakshave.node :refer [maven-repository-home os path mustache]]))
 
 ;; This is a Clojurescript copy of leiningen.new.templates.
 
