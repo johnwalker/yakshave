@@ -81,7 +81,7 @@
            data               (compromise-map external template project)
            datajs             (clj->js data)
            yakshave-map       (yakshave-map template zip datajs)
-           full-renderer-dir  (str "leiningen/new/" (:renderer yakshave-map))
+           full-renderer-dir  (str "leiningen/new/" (t/sanitize (:renderer yakshave-map)))
            full-renderer-dir  (if (= (last full-renderer-dir) \/)
                                 full-renderer-dir
                                 (str full-renderer-dir "/"))]
