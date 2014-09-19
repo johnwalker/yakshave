@@ -103,13 +103,13 @@ yakshave new template-name? project-name
      map:
 
      #+BEGIN_SRC clojure
-{:year        (t/year)
+{:year        (year)
  :name        project
- :sanitized   (t/sanitize-ns project)
- :main-ns     (t/multi-segment project)
- :path        (t/name-to-path (t/multi-segment (t/sanitize-ns project)))
- :group-id    (t/group-name project)
- :artifact-id (t/project-name project)}
+ :sanitized   (sanitize-ns project)
+ :main-ns     (multi-segment (sanitize-ns project))
+ :path        (name-to-path (multi-segment (sanitize-ns project)))
+ :group-id    (group-name project)
+ :artifact-id (project-name project)}
      #+END_SRC
 
      And you should also add a yakshave.edn to the resources folder of
