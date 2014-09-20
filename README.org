@@ -71,7 +71,7 @@ alias ys='yakshave'
 ** Why shouldn't I yakshave?
    It's not battle-tested. There are probably a lot of bugs, too. Many
    lein templates aren't yet compatible with yakshave. [[http://pages.citebite.com/b2x0j8q1megb][You would have
-   to install nodejs.]] 
+   to install nodejs.]]
 ** Complete list of supported tasks
    #+BEGIN_SRC sh
 yakshave new template-name? project-name
@@ -95,40 +95,64 @@ yakshave new template-name? project-name
     yakshave new app foobar
     #+END_EXAMPLE
 **** Creating yakshave compatible templates
-     Yakshave templates should use standard names for standard
-     stuff. If we've missed a value that you think should be here, let
-     us know.
-
-     The {{names}} you should be using are the keys of the following
-     map:
+     If you squint, yakshave templates look a lot like leiningen
+     ones. Here is what the app template looks like when it's
+     described with yakshave:
 
      #+BEGIN_SRC clojure
-{:year        (year)
- :name        project
- :sanitized   (sanitize-ns project)
- :main-ns     (multi-segment (sanitize-ns project))
- :path        (name-to-path (multi-segment (sanitize-ns project)))
- :group-id    (group-name project)
- :artifact-id (project-name project)}
-     #+END_SRC
-
-     And you should also add a yakshave.edn to the resources folder of
-     your template. It should contain something like:
-
-     #+BEGIN_SRC clojure
-{:renderer "compojure"
- :files [[".gitignore" "gitignore"]
-         ["project.clj" "project_lein2.clj"]
+{:renderer "app"
+ :files [["project.clj" "project.clj"]
          ["README.md" "README.md"]
-         ["src/{{path}}/handler.clj" "handler.clj"]
-         ["test/{{path}}/test/handler.clj" "handler_test.clj"]
-         "resources/public"]}
+         ["doc/intro.md" "intro.md"]
+         [".gitignore" "gitignore"]
+         ["src/{{nested-dirs}}.clj" "core.clj"]
+         ["test/{{nested-dirs}}_test.clj" "test.clj"]
+         ["LICENSE" "LICENSE"]
+         "resources"]
+ :data {:raw-name    [:identity]
+        :name        [:project-name]
+        :namespace   [:sanitize-ns
+                      :multi-segment]
+        :nested-dirs [:sanitize-ns
+                      :multi-segment
+                      :name-to-path]
+        :year        [:year]}}
      #+END_SRC
 
-     See the example:
-     https://github.com/johnwalker/compojure-template/tree/yakshave. Note,
-     the names are still very wet paint.
+     The vector is treated as thread-first on the name the user passes
+     to yakshave. If a string were passed instead, then that value
+     would merely be substituted. For example, in the "template" template:
+     #+BEGIN_SRC  clojure
+{:renderer "template"
+ :files [["README.md" "README.md"]
+         ["project.clj" "project.clj"]
+         [".gitignore" "gitignore"]
+         ["src/leiningen/new/{{sanitized}}.clj" "temp.clj"]
+         ["resources/leiningen/new/{{sanitized}}/foo.clj" "foo.clj"]
+         ["LICENSE" "LICENSE"]]
+ :data {:name        [:identity]
+        :sanitized   [:sanizite]
+        :placeholder "{{:sanitized}}"
+        :year        [:year]}}
+     #+END_SRC
 
+     The valid keys are
+
+     #+BEGIN_SRC clojure
+   :year
+   :identity
+   :sanitize-ns
+   :sanitize
+   :multi-segment
+   :name-to-path
+   :group-name
+   :project-name
+   :unprefix
+     #+END_SRC
+
+     which correspond directly to the built-in leiningen ones. Two new
+     keys are :identity and :unprefix. You already know what :identity
+     does, and you don't care about :unprefix.
 **** List of yakshave compatible templates
      The built-in leiningen templates:
 
