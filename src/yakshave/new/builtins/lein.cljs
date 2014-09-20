@@ -9,7 +9,15 @@
            ["src/{{nested-dirs}}.clj" "core.clj"]
            ["test/{{nested-dirs}}_test.clj" "test.clj"]
            ["LICENSE" "LICENSE"]
-           "resources"]})
+           "resources"]
+   :data {:raw-name    [:identity]
+          :name        [:project-name]
+          :namespace   [:sanitize-ns
+                        :multi-segment]
+          :nested-dirs [:sanitize-ns
+                        :multi-segment
+                        :name-to-path]
+          :year        [:year]}})
 
 (def default
   {:renderer "default"
@@ -20,7 +28,12 @@
            ["src/{{nested-dirs}}.clj" "core.clj"]
            ["test/{{nested-dirs}}_test.clj" "test.clj"]
            ["LICENSE" "LICENSE"]
-           "resources"]})
+           "resources"]
+   :data {:raw-name    [:identity]
+          :name        [:project-name]
+          :namespace   [:sanitize-ns :multi-segment]
+          :nested-dirs [:sanitize-ns :multi-segment :name-to-path]
+          :year        [:year]}})
 
 (def plugin
   {:renderer "plugin"
@@ -28,7 +41,11 @@
            ["README.md" "README.md"]
            [".gitignore" "gitignore"]
            ["src/leiningen/{{sanitized}}.clj" "name.clj"]
-           ["LICENSE" "LICENSE"]]})
+           ["LICENSE" "LICENSE"]]
+   :data {:name            [:identity]
+          :unprefixed-name [:unprefix]
+          :sanitized       [:unprefix :sanitize]
+          :year            [:year]}})
 
 (def template
   {:renderer "template"
@@ -37,4 +54,8 @@
            [".gitignore" "gitignore"]
            ["src/leiningen/new/{{sanitized}}.clj" "temp.clj"]
            ["resources/leiningen/new/{{sanitized}}/foo.clj" "foo.clj"]
-           ["LICENSE" "LICENSE"]]})
+           ["LICENSE" "LICENSE"]]
+   :data {:name        [:identity]
+          :sanitized   [:sanizite]
+          :placeholder "{{:sanitized}}"
+          :year        [:year]}})
