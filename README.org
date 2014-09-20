@@ -131,7 +131,7 @@ yakshave new template-name? project-name
          ["resources/leiningen/new/{{sanitized}}/foo.clj" "foo.clj"]
          ["LICENSE" "LICENSE"]]
  :data {:name        [:identity]
-        :sanitized   [:sanizite]
+        :sanitized   [:sanitize]
         :placeholder "{{:sanitized}}"
         :year        [:year]}}
      #+END_SRC

@@ -56,6 +56,6 @@
            ["resources/leiningen/new/{{sanitized}}/foo.clj" "foo.clj"]
            ["LICENSE" "LICENSE"]]
    :data {:name        [:identity]
-          :sanitized   [:sanizite]
+          :sanitized   [:sanitize]
           :placeholder "{{:sanitized}}"
           :year        [:year]}})
