@@ -6,41 +6,6 @@
             [yakshave.new.templates :as t]
             [yakshave.node :as node]))
 
-(defn standard-map [project]
-  {:year         (t/year)
-   :name          project
-   :sanitized-ns (t/sanitize-ns project)
-   :main-ns      (-> project
-                     t/sanitize-ns
-                     t/multi-segment)
-   :path         (-> project
-                     t/sanitize-ns
-                     t/multi-segment
-                     t/name-to-path)
-   :group-id     (t/group-name project)
-   :artifact-id  (t/project-name project)})
-
-(defn leiningen-map [template project]
-  (let [unprefixed (if (and (= template "plugin")
-                            (re-matches #"lein-" project))
-                     (subs project 5)
-                     project)]
-    {:name project
-     :unprefixed-name unprefixed
-     :sanitized (t/sanitize unprefixed)
-     :placeholder "{{:placeholder}}"}))
-
-(defn compromise-map [external template project]
-  (let [standard (standard-map project)]
-    (if (= "leiningen" external)
-      (let [a-compromise (clojure.set/rename-keys
-                          standard
-                          {:path :nested-dirs
-                           :name :raw-name
-                           :main-ns :namespace})]
-        (merge a-compromise (leiningen-map template project)))
-      standard)))
-
 (defn load-latest-jar [external]
   (let [jar-path           (case external
                              "leiningen" (t/get-mvn-path
@@ -56,47 +21,88 @@
 (defn has-yakshave? [zip]
   (seq (filter #(= "yakshave.edn" %) (.getEntries zip))))
 
-(defn yakshave-map [template zip datajs]
-  (let [builtin-fn #(update-in % [:files]
-                               (fn [v] (mapv
-                                        (fn [x]
-                                          (cond (vector? x) [(node/render (first x) datajs) (second x)]
-                                                (string? x) (node/render x datajs)
-                                                :else :shit))
-                                        v)))]
-    (case template
-      "app" (builtin-fn lein/app)
-      "default" (builtin-fn lein/default)
-      "plugin" (builtin-fn lein/plugin)
-      "template" (builtin-fn lein/template)
-      (try
-        (cljs.reader/read-string
-         (node/render (.readAsText zip "yakshave.edn") datajs))
-        (catch js/Error e
-            (throw (js/Error. (str "The " template " template doesn't have a yakshave.edn"))))))))
+(defn render-yakshave [ys datajs]
+  (let [error-msg (fn [x]
+                    (str x " in yakshave.edn is not a vector or string."))]
+    (update-in ys [:files]
+               (fn [v] (mapv
+                        (fn [x]
+                          (cond (vector? x) [(node/render (first x) datajs)
+                                             (second x)]
+                                (string? x) (node/render x datajs)
+                                :else (throw (js/Error. (error-msg x)))))
+                        v)))))
+
+(defn raw-yakshave-map [template zip]
+  (case template
+    "app" lein/app
+    "default" lein/default
+    "plugin" lein/plugin
+    "template" lein/template
+    (let [raw-text
+          (try
+            (.readAsText zip "yakshave.edn")
+            (catch js/Error e
+              (throw (js/Error.
+                      (str template " doesn't contain a yakshave.edn.")))))
+          yakshave
+          (try
+            (cljs.reader/read-string raw-text)
+            (catch js/Error e
+              (throw (js/Error. (str "The yakshave.edn is malformed.")))))]
+      yakshave)))
+
+(defn unprefix [s]
+  (if (re-matches #"lein-*" s)
+    (subs s 5)
+    s))
+
+(def function-map
+  {:year            (constantly t/year)
+   :identity        identity
+   :sanitize-ns     t/sanitize-ns
+   :sanitize        t/sanitize
+   :multi-segment   t/multi-segment
+   :name-to-path    t/name-to-path
+   :group-name      t/group-name
+   :project-name    t/project-name
+   :unprefix        unprefix})
+
+(defn build-data [ys project]
+  (into {}
+        (map
+         (fn [[k v]]
+           (if (vector? v)
+             [k (reduce (fn [x f]
+                          (try ((f function-map) x)
+                               (catch js/Error e
+                                 (throw (js/Error. (str f " is not a built-in function.")))))) project v)]
+             [k v])))
+        (:data ys)))
 
 (defn new
   ([external template project]
      (let [zip                (load-latest-jar external)
-           data               (compromise-map external template project)
+           yakshave-map       (raw-yakshave-map template zip)
+           artifact-id        (t/project-name project)
+           data               (build-data yakshave-map project)
            datajs             (clj->js data)
-           yakshave-map       (yakshave-map template zip datajs)
+           yakshave-map       (render-yakshave yakshave-map datajs)
            full-renderer-dir  (str "leiningen/new/" (t/sanitize (:renderer yakshave-map)))
            full-renderer-dir  (if (= (last full-renderer-dir) \/)
                                 full-renderer-dir
                                 (str full-renderer-dir "/"))]
-       (let [artifact-id (:artifact-id data)]
-         (doseq [entry (:files yakshave-map)]
-           (cond (string? entry)
-                 (let [dir (str artifact-id "/" entry)]
-                   (node/mkdirp dir #js {} identity))
-                 (vector? entry)
-                 (let [[endpoint mustache-file] entry
-                       endpoint (str artifact-id "/" endpoint)
-                       dir      (apply str (interpose "/" (butlast (str/split endpoint #"/"))))]
-                   (node/mkdirp dir #js {}
-                                (fn [e]
-                                  (let [rendered (node/render (.readAsText zip (str full-renderer-dir mustache-file))
-                                                              datajs)
-                                        cleaned (t/fix-line-separators rendered)]
-                                    (.writeFile node/fs endpoint cleaned #js {:flag "wx"} identity)))))))))))
+       (doseq [entry (:files yakshave-map)]
+         (cond (string? entry)
+               (let [dir (str artifact-id "/" entry)]
+                 (node/mkdirp dir #js {} identity))
+               (vector? entry)
+               (let [[endpoint mustache-file] entry
+                     endpoint (str artifact-id "/" endpoint)
+                     dir      (apply str (interpose "/" (butlast (str/split endpoint #"/"))))]
+                 (node/mkdirp dir #js {}
+                              (fn [e]
+                                (let [rendered (node/render (.readAsText zip (str full-renderer-dir mustache-file))
+                                                            datajs)
+                                      cleaned (t/fix-line-separators rendered)]
+                                  (.writeFile node/fs endpoint cleaned #js {:flag "wx"} identity))))))))))
