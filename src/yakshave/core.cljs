@@ -7,9 +7,12 @@
 (enable-console-print!)
 
 (defn make-help-message [args]
-  (str "Unrecognized arguments " args "\n"
-       "Available tasks:\n"
-       "new            ex: yakshave new foo, yakshave new app bar"))
+  (str
+   (when (seq args)
+     (str "Unrecognized arguments " args "\n"))
+   "Available tasks:\n"
+   "new                 Generate scaffolds like lein new."
+   ))
 
 (defn -main [& args]
   (match [(vec args)]
@@ -24,7 +27,7 @@
 
          [["new" template project-name]]
          (task/new template    template project-name)
-         
+
          :else (.log js/console (make-help-message args))))
 
 (set! *main-cli-fn* -main)
