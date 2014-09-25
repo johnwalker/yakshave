@@ -41,17 +41,8 @@ $ npm install -g
    It's a lot faster - in the initial release:
 
    #+BEGIN_SRC sh
-$ time yakshave new foobar
-# yakshave new foobar  0.60s user 0.05s system 96% cpu 0.668 total
-$ time lein new bizbar
-# lein new bizbar  4.07s user 0.10s system 145% cpu 2.877 total
-   #+END_SRC
-   #+BEGIN_SRC sh
-$ time ys new compojure example                                                                                                                                                                                                                                          !2804
+$ time ys new compojure example
 yakshave new compojure example  0.18s user 0.01s system 101% cpu 0.191 total
-
-$ time lein new compojure example2                                                                                                                                                                                                                                       !2841
-lein new compojure example2  4.66s user 0.18s system 120% cpu 4.020 total
    #+END_SRC
 
    For small templates, yakshave performs extremely well.
