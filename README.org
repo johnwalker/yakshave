@@ -46,10 +46,6 @@ $ time yakshave new foobar
 $ time lein new bizbar
 # lein new bizbar  4.07s user 0.10s system 145% cpu 2.877 total
    #+END_SRC
-
-   Hmm. Like 6 times faster. But remember, those templates are buried
-   deep within the leiningen.jar.
-
    #+BEGIN_SRC sh
 $ time ys new compojure example                                                                                                                                                                                                                                          !2804
 yakshave new compojure example  0.18s user 0.01s system 101% cpu 0.191 total
@@ -58,9 +54,7 @@ $ time lein new compojure example2                                              
 lein new compojure example2  4.66s user 0.18s system 120% cpu 4.020 total
    #+END_SRC
 
-   For small templates it's almost 26 times faster! Note that the
-   compojure template refers to this repository:
-   https://github.com/johnwalker/compojure-template
+   For small templates, yakshave performs extremely well.
 
    Aliasing yakshave to ys for finger performance is recommended.
 
