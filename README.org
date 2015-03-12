@@ -17,6 +17,11 @@
   enough talk… Have at you!
   #+END_QUOTE
 
+This project was created under a very strong coffee high. I have to do other 
+things. I still think the idea is cute, but also short-sighted -- Java 9 is going
+to make it easier for Clojure to start more quickly. If you want to maintain it
+let me know and I'll point it to your fork :)
+
 ** What is a yakshave?
    Yakshave is a tool written in Clojurescript (Nodejs) for managing
    and generating [[https://github.com/technomancy/leiningen][leiningen]] projects. It aims to handle the scripting
