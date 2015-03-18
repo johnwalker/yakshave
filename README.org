@@ -1,22 +1,4 @@
 * yakshave
-
-  #+BEGIN_QUOTE
-  Richter: Die monster. You don’t belong in this world!
-
-  Dracula: It was not by my hand I was once again given flesh. I was
-  brought here by humans who wished to pay me tribute!
-
-  Richter: Tribute!? You steal men’s souls, and make them your slaves!
-
-  Dracula: Perhaps the same could be said of all religions…
-
-  Richter: Your words are as empty as your soul! Mankind ill needs a
-  savior such as you!
-
-  Dracula: What is a man? A miserable little pile of secrets. But
-  enough talk… Have at you!
-  #+END_QUOTE
-
 This project was created under a very strong coffee high. I have to do other 
 things. I still think the idea is cute, but also short-sighted -- Java 9 is going
 to make it easier for Clojure to start more quickly. If you want to maintain it
